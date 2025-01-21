@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spin Wheel App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Reset Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-image: url('liv.jpeg'); /* Use a public image URL */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+      text-align: center;
+      transition: background-color 1s ease;
+    }
+
+    h1 {
+      font-size: 4vw; /* Responsive font size */
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 80vw; /* Responsive width */
+      height: 80vw; /* Responsive height */
+      max-width: 300px; /* Max width for larger screens */
+      max-height: 300px; /* Max height for larger screens */
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, #ddd);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      border: 5px solid rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spin-btn {
+      position: absolute;
+      width: 15vw; /* Responsive button width */
+      height: 15vw; /* Responsive button height */
+      max-width: 80px; /* Max width for larger screens */
+      max-height: 80px; /* Max height for larger screens */
+      background: linear-gradient(to right, #ff7e5f, #feb47b);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 2vw; /* Responsive font size */
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 8px 15px rgba(255, 126, 95, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 5;
+    }
+
+    .spin-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255, 126, 95, 0.8);
+    }
+
+    #message {
+      font-size: 3vw; /* Responsive font size */
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+      margin-top: 20px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    #message.show {
+      opacity: 1;
+    }
+
+    /* Pointer Style */
+    .pointer {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 20px solid #ff4081;
+      z-index: 10;
+    }
+
+    /* Confetti Animation */
+    .confetti {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 5px;
+      height: 10px;
+      background-color: #FFEB3B;
+      opacity: 0;
+      animation: confetti-animation 5s forwards;
+    }
+
+    @keyframes confetti-animation {
+      0% {
+        transform: translateX(-50%) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50%) translateY(600px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Streamer Animation */
+    .streamer {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 100px;
+      background-color: #FF4081;
+      opacity: 0;
+      animation: streamer-animation 5s ease-in-out forwards;
+    }
+
+    @keyframes streamer-animation {
+      0% {
+        transform: translateX(-50%) translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50%) translateY(600px) rotate(180deg);
+        opacity: 0;
+      }
+    }
+
+    /* Balloons Animation */
+    .balloon {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 40px;
+      height: 60px;
+      background-color: #FF5722;
+      border-radius: 50%;
+      opacity: 0;
+      animation: balloon-animation 6s ease-in-out forwards;
+    }
+
+    @keyframes balloon-animation {
+      0% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-50%) translateY(-500px);
+        opacity: 0;
+      }
+    }
+
+    /* Sparkles Effect */
+    .sparkle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.8);
+      animation: sparkle-animation 1.5s infinite ease-in-out;
+    }
+
+    @keyframes sparkle-animation {
+      0% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+    }
+
+    /* Background Color Transition */
+    .celebration-background {
+      background-color: #ff8c00;
+    }
+
+    /* Media Queries for responsiveness */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 6vw; /* Adjust heading font size for smaller screens */
+      }
+
+      #message {
+        font-size: 4vw; /* Adjust message font size for smaller screens */
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Livo Perfumes Birthday Offer</h1>
+  <div class="wheel-container" id="wheel-container">
+    <canvas id="wheel" width="300" height="300"></canvas>
+    <button class="spin-btn" id="spin-btn">Spin</button>
+    <div class="pointer" id="pointer"></div> <!-- Pointer added here -->
+  </div>
+  <p id="message">Congratulations! You won a Gift Set!<br> Click Here</p>
+
+  <!-- Confetti, Streamers, Balloons, and Sparkles containers -->
+  <div id="confetti-container"></div>
+  <div id="streamer-container"></div>
+  <div id="balloon-container"></div>
+  <div id="sparkle-container"></div>
+
+  <script>
+    const wheelCanvas = document.getElementById('wheel');
+    const spinBtn = document.getElementById('spin-btn');
+    const message = document.getElementById('message');
+    const confettiContainer = document.getElementById('confetti-container');
+    const streamerContainer = document.getElementById('streamer-container');
+    const balloonContainer = document.getElementById('balloon-container');
+    const sparkleContainer = document.getElementById('sparkle-container');
+    const pointer = document.getElementById('pointer');
+    const ctx = wheelCanvas.getContext('2d');
+
+    const sections = ["30% off", "50% off", "10% off", "Sorry", "FREE Gift SET", "Jacpot"];
+    const colors = ["#FFB6C1", "#FFA07A", "#FFD700", "#7CFC00", "#1E90FF", "#DA70D6"];
+    const wheelSize = sections.length;
+    let isSpinning = false;
+
+    // Draw the wheel
+    function drawWheel() {
+      const arcSize = (2 * Math.PI) / wheelSize;
+      sections.forEach((section, index) => {
+        const startAngle = index * arcSize;
+        const endAngle = startAngle + arcSize;
+
+        ctx.beginPath();
+        ctx.arc(150, 150, 150, startAngle, endAngle);
+        ctx.lineTo(150, 150);
+        ctx.fillStyle = colors[index];
+        ctx.fill();
+
+        // Add text
+        ctx.save();
+        ctx.translate(150, 150);
+        ctx.rotate(startAngle + arcSize / 2);
+        ctx.fillStyle = "#000";
+        ctx.font = "14px Poppins, sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText(section, 130, 10);
+        ctx.restore();
+      });
+    }
+
+    drawWheel();
+
+    // Spin functionality
+    spinBtn.addEventListener('click', () => {
+      if (isSpinning) return;
+      isSpinning = true;
+
+      spinBtn.disabled = true;  // Disable the button during the spin
+
+      const arcSize = (2 * Math.PI) / wheelSize;
+      const targetAngle = Math.random() * 360; // Randomize for demo
+
+      let currentAngle = 0;
+      const interval = setInterval(() => {
+        currentAngle += 5;
+        ctx.clearRect(0, 0, 300, 300);
+        ctx.save();
+        ctx.translate(150, 150);
+        ctx.rotate((currentAngle * Math.PI) / 180);
+        ctx.translate(-150, -150);
+        drawWheel();
+        ctx.restore();
+      }, 10);
+
+      setTimeout(() => {
+        clearInterval(interval);
+
+        // Show message after spin finishes
+        message.classList.add('show'); // Show the message after spin
+        document.body.classList.add('celebration-background'); // Change background color
+        isSpinning = false;
+
+        // Start celebration animations
+        startCelebration();
+
+        // Redirect to livo.html after a short delay (to give the user time to see the celebration)
+        setTimeout(() => {
+          window.location.href = 'livo.html'; // Redirect to livo.html
+        }, 2000); // 5 seconds delay before redirecting
+      }, 3000); // Spin duration is 4 seconds
+    });
+
+    // Start celebration animations (confetti, balloons, etc.)
+    function startCelebration() {
+      // Confetti
+      for (let i = 0; i < 50; i++) {
+        let confetti = document.createElement('div'); 
+        confetti.classList.add('confetti');
+        confetti.style.left = `${Math.random() * window.innerWidth}px`;
+        confetti.style.animationDelay = `${Math.random() * 2}s`;
+        confettiContainer.appendChild(confetti);
+      }
+
+      // Balloons
+      for (let i = 0; i < 5; i++) {
+        let balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        balloon.style.left = `${Math.random() * window.innerWidth}px`;
+        balloonContainer.appendChild(balloon);
+      }
+
+      // Streamers
+      for (let i = 0; i < 3; i++) {
+        let streamer = document.createElement('div');
+        streamer.classList.add('streamer');
+        streamer.style.left = `${Math.random() * window.innerWidth}px`;
+        streamerContainer.appendChild(streamer);
+      }
+
+      // Sparkles
+      for (let i = 0; i < 20; i++) {
+        let sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.left = `${Math.random() * window.innerWidth}px`;
+        sparkle.style.top = `${Math.random() * window.innerHeight}px`;
+        sparkleContainer.appendChild(sparkle);
+      }
+    }
+  </script>
+</body>
+</html>
