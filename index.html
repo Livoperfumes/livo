@@ -242,7 +242,7 @@
     const pointer = document.getElementById('pointer');
     const ctx = wheelCanvas.getContext('2d');
 
-    const sections = ["50% off", "50% off", "10% off", "Sorry", "FREE Gift SET", "Jacpot"];
+    const sections = ["50% off", "50% off", "30% off", "30% off", "FREE Gift SET", "Jacpot"];
     const colors = ["#FFB6C1", "#FFA07A", "#FFD700", "#7CFC00", "#1E90FF", "#DA70D6"];
     const wheelSize = sections.length;
     let isSpinning = false;
@@ -310,7 +310,7 @@
         // Redirect to livo.html after a short delay (to give the user time to see the celebration)
         setTimeout(() => {
           window.location.href = 'livo.html'; // Redirect to livo.html
-        }, 1.5); // 5 seconds delay before redirecting
+        }, 2000); // 5 seconds delay before redirecting
       }, 3000); // Spin duration is 4 seconds
     });
 
